@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif CRI - Feedback Instan</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; 
+        }
+
+        .quiz-container {
+            background-color: white;
+            width: 100%;
+            max-width: 600px;
+            height: 90vh;
+            max-height: 550px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden; 
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            overflow-y: auto; 
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.25rem;
+        }
+
+        .options-group {
+            margin-bottom: 10px;
+        }
+
+        .options-group p {
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .option-label {
+            display: block;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 10px 15px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .option-label:hover {
+            background: #e8f0fe;
+            border-color: #4285f4;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #eee;
+            margin: 12px 0;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #357ae8;
+        }
+
+        /* Tombol lanjut sengaja disembunyikan dulu */
+        .btn-next {
+            background-color: #28a745;
+            display: none;
+        }
+        .btn-next:hover {
+            background-color: #218838;
+        }
+
+        .feedback-box {
+            display: none; 
+            margin-top: 15px;
+            padding: 15px;
+            border-left: 5px solid #4285f4;
+            border-radius: 0 8px 8px 0;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status {
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 5px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .paham { background: #d4edda; color: #155724; border-color: #28a745; }
+        .miskonsepsi { background: #f8d7da; color: #721c24; border-color: #dc3545; }
+        .tebak { background: #fff3cd; color: #856404; border-color: #ffc107; }
+        .tidaktahu { background: #e2e3e5; color: #383d41; border-color: #6c757d; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+
+    <div class="page active" id="page1">
+        <div>
+            <h2>Soal 1: Apa ibu kota negara Indonesia saat ini?</h2>
+            
+            <div class="options-group">
+                <p>Pilih Jawaban:</p>
+                <label class="option-label"><input type="radio" name="q1" value="A"> A. Bandung</label>
+                <label class="option-label"><input type="radio" name="q1" value="B"> B. Jakarta</label>
+                <label class="option-label"><input type="radio" name="q1" value="C"> C. Nusantara</label>
+            </div>
+
+            <hr>
+
+            <div class="options-group">
+                <p>Tingkat Keyakinan:</p>
+                <label class="option-label"><input type="radio" name="c1" value="yakin"> Yakin</label>
+                <label class="option-label"><input type="radio" name="c1" value="tidak"> Tidak Yakin</label>
+            </div>
+
+            <div class="feedback-box" id="fb1"></div>
+        </div>
+
+        <div class="btn-container">
+            <button id="btnCheck1" onclick="cekJawaban(1)">Cek Jawaban</button>
+            <button id="btnNext1" class="btn-next" onclick="pindahHalaman(1, 2)">Lanjut ke Soal 2</button>
+        </div>
+    </div>
+
+    <div class="page" id="page2">
+        <div>
+            <h2>Soal 2: Planet manakah yang terkecil di tata surya kita?</h2>
+            
+            <div class="options-group">
+                <p>Pilih Jawaban:</p>
+                <label class="option-label"><input type="radio" name="q2" value="A"> A. Merkurius</label>
+                <label class="option-label"><input type="radio" name="q2" value="B"> B. Jupiter</label>
+                <label class="option-label"><input type="radio" name="q2" value="C"> C. Mars</label>
+            </div>
+
+            <hr>
+
+            <div class="options-group">
+                <p>Tingkat Keyakinan:</p>
+                <label class="option-label"><input type="radio" name="c2" value="yakin"> Yakin</label>
+                <label class="option-label"><input type="radio" name="c2" value="tidak"> Tidak Yakin</label>
+            </div>
+
+            <div class="feedback-box" id="fb2"></div>
+        </div>
+
+        <div class="btn-container">
+            <button id="btnCheck2" onclick="cekJawaban(2)">Cek Jawaban</button>
+            <button id="btnNext2" class="btn-next" onclick="tampilkanSkorAkhir()">Lihat Skor Akhir</button>
+        </div>
+    </div>
+
+    <div class="page" id="pageAkhir">
+        <div style="text-align: center; margin: auto 0;">
+            <h2>Kuis Selesai!</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">Terima kasih telah mengisi kuis diagnosis ini.</p>
+            <div id="skorAkhir" style="font-size: 1.5rem; font-weight: bold; color: #4285f4; margin-bottom: 30px;"></div>
+            <button onclick="location.reload()" style="background-color: #6c757d;">Ulangi Kuis</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const kunciJawaban = { q1: "B", q2: "A" };
+    let skorBenar = 0;
+
+    function cekJawaban(soalNum) {
+        let userAns = document.querySelector(`input[name="q${soalNum}"]:checked`);
+        let userCert = document.querySelector(`input[name="c${soalNum}"]:checked`);
+
+        if (!userAns || !userCert) {
+            alert("Mohon isi jawaban DAN tingkat keyakinan terlebih dahulu!");
+            return;
+        }
+
+        let ansValue = userAns.value;
+        let certValue = userCert.value;
+        let isCorrect = (ansValue === kunciJawaban[`q${soalNum}`]);
+        
+        let fbBox = document.getElementById(`fb${soalNum}`);
+        let btnCheck = document.getElementById(`btnCheck${soalNum}`);
+        let btnNext = document.getElementById(`btnNext${soalNum}`);
+
+        // Kunci input
+        document.querySelectorAll(`input[name="q${soalNum}"]`).forEach(el => el.disabled = true);
+        document.querySelectorAll(`input[name="c${soalNum}"]`).forEach(el => el.disabled = true);
+
+        let statusClass = "";
+        let kesimpulan = "";
+        let analisisTeks = "";
+
+        if (isCorrect) {
+            skorBenar++;
+            if (certValue === "yakin") {
+                statusClass = "paham";
+                kesimpulan = "Paham Konsep";
+                analisisTeks = "Luar biasa! Kamu menjawab dengan benar dan memiliki keyakinan yang kuat terhadap konsep ini.";
+            } else {
+                statusClass = "tebak";
+                kesimpulan = "Menebak / Beruntung";
+                analisisTeks = "Jawabanmu benar, tetapi karena kamu ragu, disarankan untuk mengulas kembali materinya agar lebih mantap.";
+            }
+        } else {
+            if (certValue === "yakin") {
+                statusClass = "miskonsepsi";
+                kesimpulan = "Miskonsepsi (Salah Paham)";
+                analisisTeks = "Kamu sangat yakin, tetapi jawabanmu keliru. Ini pertanda ada konsep yang salah dipahami. Yuk, pelajari lagi pembahasannya!";
+            } else {
+                statusClass = "tidaktahu";
+                kesimpulan = "Tidak Tahu Konsep";
+                analisisTeks = "Jawabanmu salah dan kamu memang ragu. Jangan berkecil hati, mari pelajari materi ini bersama-sama.";
+            }
+        }
+
+        // Tampilkan Box Feedback
+        fbBox.className = `feedback-box ${statusClass}`;
+        fbBox.style.display = "block";
+        fbBox.innerHTML = `
+            <span class="status ${statusClass}">${isCorrect ? '✅ Benar' : '❌ Salah'} - ${kesimpulan}</span>
+            <p style="font-size: 0.9rem; color: #333; margin-top: 5px;">${analisisTeks}</p>
+        `;
+
+        // Sembunyikan tombol cek jawaban, lalu munculkan tombol lanjut
+        btnCheck.style.display = "none";
+        btnNext.style.display = "block";
+    }
+
+    function pindahHalaman(dari, ke) {
+        document.getElementById(`page${dari}`).classList.remove('active');
+        document.getElementById(`page${ke}`).classList.add('active');
+    }
+
+    function tampilkanSkorAkhir() {
+        document.getElementById('page2').classList.remove('active');
+        document.getElementById('pageAkhir').classList.add('active');
+        document.getElementById('skorAkhir').innerText = `Total Benar: ${skorBenar} dari 2 Soal`;
+    }
+</script>
+
+</body>
+</html>
