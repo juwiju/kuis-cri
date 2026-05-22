@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analisis Guru - Kuis CRI</title>
+    <!-- Chart.js untuk Diagram Pie -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        header {
+            margin-bottom: 30px;
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 24px;
+            color: #1e3a8a;
+        }
+        header p {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .btn-refresh {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .btn-refresh:hover {
+            background-color: #1d4ed8;
+        }
+        
+        /* Layout Grid */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        @media (min-width: 992px) {
+            .grid-layout {
+                grid-template-columns: 7fr 5fr;
+            }
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        /* Tabel Styling */
+        .table-container {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Badge untuk Skor / Diagnosis */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-paham { background-color: #dcfce7; color: #166534; }
+        .badge-mis { background-color: #fee2e2; color: #991b1b; }
+        .badge-tebak { background-color: #fef3c7; color: #92400e; }
+        .badge-tidak { background-color: #f1f5f9; color: #475569; }
+
+        /* Chart Area */
+        .chart-wrapper {
+            position: relative;
+            margin: auto;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 40px 0;
+            color: #64748b;
+            font-size: 16px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1><i class="fa-solid fa-chart-line"></i> Dashboard Analisis Guru</h1>
+            <p>Monitoring Evaluasi Tingkat Pemahaman Konsep Siswa (Four-Tier CRI)</p>
+        </div>
+        <button class="btn-refresh" onclick="muatData()"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+    </header>
+
+    <div class="grid-layout">
+        <!-- SEBELAH KIRI: TABEL DATA SISWA -->
+        <div class="card">
+            <div class="card-title"><i class="fa-solid fa-users"></i> Daftar Hasil Ujian Siswa</div>
+            <div class="table-container" id="kontenTabel">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Sedang menarik data dari Google Sheets...
+                </div>
+            </div>
+        </div>
+
+        <!-- SEBELAH KANAN: PIE CHART AKUMULASI KELAS -->
+        <div class="card">
+            <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Akumulasi Diagnosis Satu Kelas</div>
+            <div class="chart-wrapper">
+                <canvas id="pieChartKelas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ⚠️ GANTI TULISAN DI BAWAH INI DENGAN URL WEB APPS SCRIPT KAMU YANG BARU (YANG ADA doGet NYA)
+    const API_URL = "https://script.google.com/macros/s/AKfycbxRYZ76X6RM8uLgb5H726K_AsUIzUKoEhVrV-egXnDn-t3LBt4uaEakVEwatBc4MSap/exec";
+
+    let chartSiswa = null;
+
+    async function muatData() {
+        const tabelContainer = document.getElementById("kontenTabel");
+        tabelContainer.innerHTML = `<div class="loading"><div class="spinner"></div>Sedang memperbarui data...</div>`;
+
+        if (API_URL === "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_KAMU") {
+            tabelContainer.innerHTML = `<div style="color:red; text-align:center; padding: 20px;"><b>Eror:</b> Kamu belum memasukkan link API Apps Script di baris ke-142 kodingan dashboard.html ini!</div>`;
+            return;
+        }
+
+        try {
+            const respon = await fetch(API_URL);
+            const dataSiswa = await respon.json();
+
+            if (dataSiswa.length === 0) {
+                tabelContainer.innerHTML = `<div style="text-align:center; padding: 20px;">Belum ada data siswa yang masuk.</div>`;
+                return;
+            }
+
+            // Wadah penampung hitungan kategori untuk Chart
+            let hitungKategori = {
+                "Paham Konsep": 0,
+                "Miskonsepsi": 0,
+                "Menebak": 0,
+                "Tidak Tahu Konsep": 0
+            };
+
+            // Bikin Struktur Tabel
+            let htmlTabel = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Skor</th>
+                            <th>Diagnosis Soal 1</th>
+                            <th>Diagnosis Soal 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Loop untuk memasukkan baris data ke tabel & sekalian menghitung kategori chart
+            dataSiswa.forEach(siswa => {
+                htmlTabel += `
+                    <tr>
+                        <td><b>${siswa.nama}</b></td>
+                        <td>${siswa.kelas}</td>
+                        <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">${siswa.skor}</span></td>
+                        <td>${buatBadgeDiagnosis(siswa.soal1_cri)}</td>
+                        <td>${buatBadgeDiagnosis(siswa.soal2_cri)}</td>
+                    </tr>
+                `;
+
+                // Hitung akumulasi untuk dimasukkan ke diagram pie
+                akumulasiKategori(siswa.soal1_cri, hitungKategori);
+                akumulasiKategori(siswa.soal2_cri, hitungKategori);
+            });
+
+            htmlTabel += `</tbody></table>`;
+            tabelContainer.innerHTML = htmlTabel;
+
+            // Gambar atau update Diagram Pie Chart
+            updatePieChart(hitungKategori);
+
+        } catch (error) {
+            console.error(error);
+            tabelContainer.innerHTML = `<div style="color:red; text-align:center; padding: 20px;"><b>Gagal mengambil data!</b><br>Pastikan Apps Script sudah di-deploy dengan akses 'Anyone' (Siapa Saja).</div>`;
+        }
+    }
+
+    // Fungsi pembantu membuat warna badge di tabel agar menarik
+    function buatBadgeDiagnosis(teksKategori) {
+        if (!teksKategori) return "-";
+        let norm = teksKategori.toLowerCase();
+        if (norm.includes("paham konsep")) return `<span class="badge badge-paham">Paham Konsep</span>`;
+        if (norm.includes("miskonsepsi") || norm.includes("salah paham")) return `<span class="badge badge-mis">Miskonsepsi</span>`;
+        if (norm.includes("menebak") || norm.includes("kurang yakin")) return `<span class="badge badge-tebak">Menebak</span>`;
+        return `<span class="badge badge-tidak">Tidak Tahu Konsep</span>`;
+    }
+
+    // Fungsi pembantu mengelompokkan teks dari sheet ke kategori chart
+    function akumulasiKategori(teksKategori, objekHitung) {
+        if (!teksKategori) return;
+        let norm = teksKategori.toLowerCase();
+        if (norm.includes("paham konsep")) objekHitung["Paham Konsep"]++;
+        else if (norm.includes("miskonsepsi") || norm.includes("salah paham")) objekHitung["Miskonsepsi"]++;
+        else if (norm.includes("menebak") || norm.includes("kurang yakin")) objekHitung["Menebak"]++;
+        else objekHitung["Tidak Tahu Konsep"]++;
+    }
+
+    // Fungsi menggambar Chart.js
+    function updatePieChart(dataHitung) {
+        const ctx = document.getElementById('pieChartKelas').getContext('2d');
+        
+        // Kalau chart-nya sudah ada, kita hancurkan dulu lalu bikin baru biar datanya ter-refresh lancar
+        if (chartSiswa !== null) {
+            chartSiswa.destroy();
+        }
+
+        chartSiswa = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(dataHitung),
+                datasets: [{
+                    data: Object.values(dataHitung),
+                    backgroundColor: [
+                        '#22c55e', // Hijau untuk Paham Konsep
+                        '#ef4444', // Merah untuk Miskonsepsi
+                        '#eab308', // Kuning untuk Menebak
+                        '#64748b'  // Abu-abu untuk Tidak Tahu Konsep
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: { size: 13 }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Jalankan otomatis fungsi memuat data saat halaman web pertama kali dibuka
+    window.onload = muatData;
+</script>
+
+</body>
+</html>
