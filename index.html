@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kuis Diagnosis CRI (Four-Tier)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         * {
@@ -245,8 +246,14 @@
     <div class="page" id="pageAkhir">
         <div style="text-align: center; margin: auto 0;">
             <h1>Kuis Selesai!</h1>
-            <p style="font-size: 1.2rem; margin-bottom: 20px;">Terima kasih telah mengisi kuis diagnosis ini.</p>
-            <div id="skorAkhir" style="font-size: 1.5rem; font-weight: bold; color: #4285f4; margin-bottom: 30px;"></div>
+            <p style="font-size: 1.2rem; margin-bottom: 10px;">Terima kasih telah mengisi kuis diagnosis ini.</p>
+            
+            <div id="skorAkhir" style="font-size: 1.5rem; font-weight: bold; color: #1352b6; margin-bottom: 20px;"></div>
+
+            <div style="width: 100%; max-width: 250px; margin: 0 auto 20px;">
+                <canvas id="chartSiswa"></canvas>
+            </div>
+
             <button onclick="location.reload()" style="background-color: #6c757d;">Ulangi Kuis</button>
         </div>
     </div>
@@ -377,6 +384,9 @@
         .then(() => {
             pindahHalaman('pageLoading', 'pageAkhir');
             document.getElementById('skorAkhir').innerText = `Skor Kamu: ${dataSiswa.skor} / 100`;
+            
+            // PANGGIL DI SINI BIAR MUNCUL PAS HALAMAN TERAKHIR TERBUKA
+            buatGrafikSiswa();
         })
         .catch(error => {
             alert("Gagal mengirim data, tapi kuis selesai!");
@@ -385,6 +395,42 @@
             console.error(error);
         });
     }
+
+    function buatGrafikSiswa() {
+        // 1. Siapkan variabel hitung (Bahan Bakar Grafik)
+        let hitung = { "Paham Konsep": 0, "Miskonsepsi": 0, "Menebak": 0, "Tidak Tahu Konsep": 0 };
+
+        // 2. Ambil data dari hasilKuis (Jawaban-jawaban tadi)
+        // Kita cek semua diagnosis yang sudah masuk ke variabel hasilKuis
+        Object.values(hasilKuis).forEach(status => {
+            if (status === "Paham Konsep Mulia") hitung["Paham Konsep"]++;
+            else if (status === "Miskonsepsi (Salah Paham)") hitung["Miskonsepsi"]++;
+            else if (status === "Paham Sebagian / Kurang Yakin") hitung["Menebak"]++;
+            else if (status === "Tidak Tahu Konsep") hitung["Tidak Tahu Konsep"]++;
+        });
+
+        // 3. Gambar Grafiknya menggunakan Chart.js
+        const ctx = document.getElementById('chartSiswa').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(hitung),
+                datasets: [{
+                    data: Object.values(hitung),
+                    backgroundColor: ['#28a745', '#dc3545', '#ffc107', '#6c757d'], // Warna: Hijau, Merah, Kuning, Abu
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+
 </script>
 
 </body>
