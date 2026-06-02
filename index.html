@@ -27,17 +27,18 @@
         }
 
         /* Menggunakan Font Chewy khusus untuk Judul, Soal, dan Tombol agar Estetik */
-        h1, h2, h3, button, .font-chewy, .option-label, .input-group{
+        h1, h2, h3, button, .font-chewy, .option-label, .input-group, p{
             font-family: 'Chewy', cursive;
             letter-spacing: 1px;
+            font-size: 1.30rem;
         }
 
         .quiz-container {
             background-color: rgba(255, 255, 255, 0.0); 
             width: 100%;
-            max-width: 700px;
+            max-width: 850px;
             height: 90vh;
-            max-height: 550px;
+            max-height: 600px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             position: relative;
@@ -98,7 +99,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 0.95rem;
+            font-size: 1.20rem;
         }
         .option-label:hover { background: #e8f0fe; border-color: #4285f4; }
         input[type="radio"] { margin-right: 10px; transform: scale(1.1); }
@@ -114,7 +115,7 @@
         }
 
         button {
-            background-color: #4285f4;
+            background-color: #28a745;
             color: white;
             border: none;
             padding: 10px 24px;
@@ -123,7 +124,7 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        button:hover { background-color: #357ae8; }
+        button:hover { background-color: #218838; }
         .btn-next { background-color: #28a745; display: none; }
         .btn-next:hover { background-color: #218838; }
 
@@ -132,7 +133,7 @@
             display: none; 
             margin-top: 12px;
             padding: 12px;
-            border-left: 5px solid #4285f4;
+            border-left: 5px solid #218838;
             border-radius: 0 8px 8px 0;
         }
         .status {
@@ -156,7 +157,7 @@
     <div class="page active" id="pageIdentitas">
         <div>
             <h1>Mulai Kuis CRI</h1>
-            <p style="text-align: center; color: #666; margin-bottom: 30px;">Silakan isi identitas kamu terlebih dahulu.</p>
+            <p style="text-align: center; color: #e24848; margin-bottom: 30px;">Silakan isi identitas kamu terlebih dahulu.</p>
             
             <div class="input-group">
                 <label for="namaSiswa">Nama Lengkap:</label>
@@ -174,13 +175,15 @@
 
     <div class="page" id="page1">
         <div>
-            <h2>Soal 1: Apa ibu kota negara Indonesia saat ini?</h2>
+            <h2>Soal 1: Pernyataan yang tepat tentang reaksi gelap (Siklus Calvin) adalah ...  </h2>
             
             <h3>Tier 1: Pilihan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="q1" value="A"> A. Bandung</label>
-            <label class="option-label"><input type="radio" name="q1" value="B"> B. Jakarta</label>
-            <label class="option-label"><input type="radio" name="q1" value="C"> C. Nusantara</label>
-
+            <label class="option-label"><input type="radio" name="q1" value="A"> A. Reaksi gelap hanya berlangsung pada malam hari</label>
+            <label class="option-label"><input type="radio" name="q1" value="B"> B. Reaksi gelap berlangsung tanpa memerlukan ATP dan NADPH</label>
+            <label class="option-label"><input type="radio" name="q1" value="C"> C. Reaksi gelap dapat berlangsung tanpa cahaya langsung tetapi memerlukan hasil reaksi terang</label>
+            <label class="option-label"><input type="radio" name="q1" value="D"> D. Reaksi gelap terjadi di membran tilakoid</label>
+            <label class="option-label"><input type="radio" name="q1" value="E"> E. Reaksi gelap menghasilkan oksigen melalui fotolisis udara</label>
+            
             <h3>Tier 2: Keyakinan Jawaban</h3>
             <label class="option-label"><input type="radio" name="c1" value="yakin"> Yakin</label>
             <label class="option-label"><input type="radio" name="c1" value="tidak"> Tidak Yakin</label>
@@ -188,9 +191,11 @@
             <hr>
 
             <h3>Tier 3: Pilihan Alasan</h3>
-            <label class="option-label"><input type="radio" name="a1" value="A"> A. Karena pusat pemerintahan resmi belum pindah sepenuhnya</label>
-            <label class="option-label"><input type="radio" name="a1" value="B"> B. Karena letak geografisnya berada di tengah-tengah Indonesia</label>
-            <label class="option-label"><input type="radio" name="a1" value="C"> C. Karena kota tersebut merupakan kota terluas di pulau Jawa</label>
+            <label class="option-label"><input type="radio" name="a1" value="A"> A. Siklus Calvin menggunakan ATP dan NADPH hasil reaksi terang untuk mereduksi CO₂</label>
+            <label class="option-label"><input type="radio" name="a1" value="B"> B. Reaksi gelap hanya aktif ketika tidak ada cahaya sama sekali</label>
+            <label class="option-label"><input type="radio" name="a1" value="C"> C. Reaksi gelap menghasilkan energi utama berupa ATP</label>
+            <label class="option-label"><input type="radio" name="a1" value="D"> D. Fotolisis udara berlangsung selama Siklus Calvin di stroma</label>
+            <label class="option-label"><input type="radio" name="a1" value="E"> E. Cahaya tidak berhubungan sama sekali dengan Siklus Calvin</label>
 
             <h3>Tier 4: Keyakinan Alasan</h3>
             <label class="option-label"><input type="radio" name="ca1" value="yakin"> Yakin</label>
@@ -206,12 +211,14 @@
 
     <div class="page" id="page2">
         <div>
-            <h2>Soal 2: Planet manakah yang terkecil di tata surya kita?</h2>
+            <h2>Soal 2: Oksigen yang dilepaskan tumbuhan saat fotosintesis berasal dari ... </h2>
             
             <h3>Tier 1: Pilihan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="q2" value="A"> A. Merkurius</label>
-            <label class="option-label"><input type="radio" name="q2" value="B"> B. Jupiter</label>
-            <label class="option-label"><input type="radio" name="q2" value="C"> C. Mars</label>
+            <label class="option-label"><input type="radio" name="q2" value="A"> A. Karbon dioksida</label>
+            <label class="option-label"><input type="radio" name="q2" value="B"> B. Glukosa</label>
+            <label class="option-label"><input type="radio" name="q2" value="C"> C. RuBP</label>
+            <label class="option-label"><input type="radio" name="q1" value="D"> D. Udara</label>
+            <label class="option-label"><input type="radio" name="q1" value="E"> E. TP</label>
 
             <h3>Tier 2: Keyakinan Jawaban</h3>
             <label class="option-label"><input type="radio" name="c2" value="yakin"> Yakin</label>
@@ -220,9 +227,11 @@
             <hr>
 
             <h3>Tier 3: Pilihan Alasan</h3>
-            <label class="option-label"><input type="radio" name="a2" value="A"> A. Karena jaraknya paling dekat dengan Matahari</label>
-            <label class="option-label"><input type="radio" name="a2" value="B"> B. Karena massanya paling sedikit dan diameternya paling pendek</label>
-            <label class="option-label"><input type="radio" name="a2" value="C"> C. Karena atmosfernya sangat tipis dibanding planet lain</label>
+            <label class="option-label"><input type="radio" name="a2" value="A"> A. Fotolisis memecah molekul udara menghasilkan elektron, proton, dan oksigen</label>
+            <label class="option-label"><input type="radio" name="a2" value="B"> B. Karbon dioksida diuraikan menjadi karbon dan oksigen saat reaksi gelap</label>
+            <label class="option-label"><input type="radio" name="a2" value="C"> C. Oksigen terbentuk ketika glukosa dipecah selama fotosintesis</label>
+            <label class="option-label"><input type="radio" name="a1" value="D"> D. ATP menghasilkan oksigen saat diubah menjadi ADP</label>
+            <label class="option-label"><input type="radio" name="a1" value="E"> E. RuBP bereaksi dengan O₂ untuk menghasilkan oksigen bebas</label>
 
             <h3>Tier 4: Keyakinan Alasan</h3>
             <label class="option-label"><input type="radio" name="ca2" value="yakin"> Yakin</label>
@@ -232,7 +241,115 @@
         </div>
         <div class="btn-container">
             <button id="btnCheck2" onclick="cekJawaban(2)">Cek Jawaban</button>
-            <button id="btnNext2" class="btn-next" onclick="kirimDataDanSelesai()">Selesai & Kirim Nilai</button>
+            <button id="btnNext2" class="btn-next" onclick="pindahHalaman('page2', 'page3')">Lanjut ke Soal 3</button>
+        </div>
+    </div>
+
+    <div class="page" id="page3">
+        <div>
+            <h2>Soal 3: Fungsi utama klorofil dalam fotosintesis adalah ... </h2>
+            
+            <h3>Tier 1: Pilihan Jawaban</h3>
+            <label class="option-label"><input type="radio" name="q3" value="A"> A. Menghasilkan karbon dioksida</label>
+            <label class="option-label"><input type="radio" name="q3" value="B"> B. Menyerap energi cahaya </label>
+            <label class="option-label"><input type="radio" name="q3" value="C"> C. Menghasilkan glukosa secara langsung</label>
+            <label class="option-label"><input type="radio" name="q3" value="D"> D. Mengangkut udara menuju daun</label>
+            <label class="option-label"><input type="radio" name="q3" value="E"> E. Memecah glukosa menjadi ATP</label>
+            
+            <h3>Tier 2: Keyakinan Jawaban</h3>
+            <label class="option-label"><input type="radio" name="c3" value="yakin"> Yakin</label>
+            <label class="option-label"><input type="radio" name="c3" value="tidak"> Tidak Yakin</label>
+
+            <hr>
+
+            <h3>Tier 3: Pilihan Alasan</h3>
+            <label class="option-label"><input type="radio" name="a3" value="A"> A. Klorofil menyerap energi cahaya untuk mengeksitasi elektron pada fotosistem</label>
+            <label class="option-label"><input type="radio" name="a3" value="B"> B. bantuan Klorofil menghasilkan ATP secara langsung tanpa elektron</label>
+            <label class="option-label"><input type="radio" name="a3" value="C"> C. Klorofil berfungsi sebagai enzim pada Siklus Calvin</label>
+            <label class="option-label"><input type="radio" name="a3" value="D"> D. Klorofil memecah udara menjadi glukosa dan oksigen</label>
+            <label class="option-label"><input type="radio" name="a3" value="E"> E. Klorofil hanya memberi warna hijau tanpa fungsi fotosintesis</label>
+
+            <h3>Tier 4: Keyakinan Alasan</h3>
+            <label class="option-label"><input type="radio" name="ca3" value="yakin"> Yakin</label>
+            <label class="option-label"><input type="radio" name="ca3" value="tidak"> Tidak Yakin</label>
+
+            <div class="feedback-box" id="fb3"></div>
+        </div>
+        <div class="btn-container">
+            <button id="btnCheck3" onclick="cekJawaban(3)">Cek Jawaban</button>
+            <button id="btnNext3" class="btn-next" onclick="pindahHalaman('page3', 'page4')">Lanjut ke Soal 4</button>
+        </div>
+    </div>
+
+    <div class="page" id="page4">
+        <div>
+            <h2>Soal 4: ATP yang digunakan dalam Siklus Calvin berasal dari ... </h2>
+            
+            <h3>Tier 1: Pilihan Jawaban</h3>
+            <label class="option-label"><input type="radio" name="q4" value="A"> A. Respirasi di mitokondria saja</label>
+            <label class="option-label"><input type="radio" name="q4" value="B"> B. Fotolisis udara secara langsung</label>
+            <label class="option-label"><input type="radio" name="q4" value="C"> C. Fotofosforilasi pada reaksi terang</label>
+            <label class="option-label"><input type="radio" name="q4" value="D"> D. Pemecahan glukosa pada stroma</label>
+            <label class="option-label"><input type="radio" name="q4" value="E"> E. Pengikatan karbon dioksida oleh rubisco</label>
+            
+            <h3>Tier 2: Keyakinan Jawaban</h3>
+            <label class="option-label"><input type="radio" name="c4" value="yakin"> Yakin</label>
+            <label class="option-label"><input type="radio" name="c4" value="tidak"> Tidak Yakin</label>
+
+            <hr>
+
+            <h3>Tier 3: Pilihan Alasan</h3>
+            <label class="option-label"><input type="radio" name="a4" value="A"> A. Energi elektron pada rantai transpor elektron digunakan untuk sintesis ATP melalui kemiosmosis</label>
+            <label class="option-label"><input type="radio" name="a4" value="B"> B. ATP diproduksi langsung oleh rubisco saat mengikat CO₂</label>
+            <label class="option-label"><input type="radio" name="a4" value="C"> C. ATP terbentuk ketika glukosa dihasilkan dalam Siklus Calvin</label>
+            <label class="option-label"><input type="radio" name="a4" value="D"> D. ATP hanya digunakan pada reaksi terang dan tidak digunakan pada reaksi gelap</label>
+            <label class="option-label"><input type="radio" name="a4" value="E"> E. Fotolisis menghasilkan ATP tanpa keterlibatan transpor elektron</label>
+
+            <h3>Tier 4: Keyakinan Alasan</h3>
+            <label class="option-label"><input type="radio" name="ca4" value="yakin"> Yakin</label>
+            <label class="option-label"><input type="radio" name="ca4" value="tidak"> Tidak Yakin</label>
+
+            <div class="feedback-box" id="fb4"></div>
+        </div>
+        <div class="btn-container">
+            <button id="btnCheck4" onclick="cekJawaban(4)">Cek Jawaban</button>
+            <button id="btnNext4" class="btn-next" onclick="pindahHalaman('page4', 'page5')">Lanjut ke Soal 5</button>
+        </div>
+    </div>
+
+    <div class="page" id="page5">
+        <div>
+            <h2>Soal 5: Tumbuhan C4 lebih efisien pada suhu tinggi karena ...  </h2>
+            
+            <h3>Tier 1: Pilihan Jawaban</h3>
+            <label class="option-label"><input type="radio" name="q5" value="A"> A. Tidak melakukan Siklus Calvin</label>
+            <label class="option-label"><input type="radio" name="q5" value="B"> B. Tidak membutuhkan rubisco</label>
+            <label class="option-label"><input type="radio" name="q5" value="C"> C. Dapat mengurangi fotorespirasi</label>
+            <label class="option-label"><input type="radio" name="q5" value="D"> D. Menghasilkan ATP lebih sedikit</label>
+            <label class="option-label"><input type="radio" name="q5" value="E"> E. Tidak memerlukan karbon dioksida</label>
+            
+            <h3>Tier 2: Keyakinan Jawaban</h3>
+            <label class="option-label"><input type="radio" name="c5" value="yakin"> Yakin</label>
+            <label class="option-label"><input type="radio" name="c5" value="tidak"> Tidak Yakin</label>
+
+            <hr>
+
+            <h3>Tier 3: Pilihan Alasan</h3>
+            <label class="option-label"><input type="radio" name="a5" value="A"> A. CO₂ dikonsentrasikan pada bundle sheath sehingga rubisco lebih banyak berikatan dengan CO₂ dibandingkan O₂.</label>
+            <label class="option-label"><input type="radio" name="a5" value="B"> B. Fotorespirasi meningkatkan produksi glukosa pada suhu tinggi</label>
+            <label class="option-label"><input type="radio" name="a5" value="C"> C. Rubisco hanya dimiliki tumbuhan C3</label>
+            <label class="option-label"><input type="radio" name="a5" value="D"> D. Tumbuhan C4 tidak memiliki sel mesofil</label>
+            <label class="option-label"><input type="radio" name="a5" value="E"> E. ATP pada tumbuhan C4 dihasilkan tanpa cahaya</label>
+
+            <h3>Tier 4: Keyakinan Alasan</h3>
+            <label class="option-label"><input type="radio" name="ca5" value="yakin"> Yakin</label>
+            <label class="option-label"><input type="radio" name="ca5" value="tidak"> Tidak Yakin</label>
+
+            <div class="feedback-box" id="fb5"></div>
+        </div>
+        <div class="btn-container">
+            <button id="btnCheck5" onclick="cekJawaban(5)">Cek Jawaban</button>
+            <button id="btnNext5" class="btn-next" onclick="kirimDataDanSelesai()">Selesai & Kirim Nilai</button>
         </div>
     </div>
 
@@ -266,8 +383,11 @@
 
     // Kunci Jawaban Benar (Soal & Alasan)
     const kunci = {
-        q1: "B", a1: "A", // Soal 1: Jakarta & Alasan A
-        q2: "A", a2: "B"  // Soal 2: Merkurius & Alasan B
+        q1: "C", a1: "A", 
+        q2: "A", a2: "B",  
+        q3: "B", a3: "A", 
+        q4: "C", a4: "A",  
+        q5: "C", a5: "A"  
     };
 
     let dataSiswa = { nama: "", kelas: "", skor: 0 };
@@ -316,23 +436,23 @@
         if (isQCorrect && isACorrect) {
             if (c.value === "yakin" && ca.value === "yakin") {
                 statusClass = "paham";
-                kesimpulan = "Paham Konsep Mulia";
-                analisisTeks = "Keren! Jawaban dan alasan kamu benar, serta didukung keyakinan yang kuat.";
-                dataSiswa.skor += 50; // Total maksimal 100 untuk 2 soal
+                kesimpulan = "Paham Konsep";
+                analisisTeks = "Keren! Jawaban dan alasan kamu benar. Sangat percaya diri!.";
+                dataSiswa.skor += 20; // Total maksimal 100 untuk 2 soal
             } else {
                 statusClass = "tebak";
-                kesimpulan = "Paham Sebagian / Kurang Yakin";
-                analisisTeks = "Jawaban & alasanmu benar, tapi kamu ragu-ragu. Konsepmu perlu dimantapkan lagi.";
+                kesimpulan = "Kurang Paham";
+                analisisTeks = "Jawaban dan alasanmu benar, tapi kamu ragu-ragu. Konsepmu perlu dimantapkan lagi.";
             }
         } else if (!isQCorrect || !isACorrect) {
             if (c.value === "yakin" || ca.value === "yakin") {
                 statusClass = "miskonsepsi";
                 kesimpulan = "Miskonsepsi (Salah Paham)";
-                analisisTeks = "Kamu yakin dengan jawaban/alasanmu, padahal ada konsep yang keliru di dalamnya.";
+                analisisTeks = "Kamu yakin dengan jawaban atau alasanmu, Tapi ada konsep yang keliru di dalamnya.";
             } else {
                 statusClass = "tidaktahu";
                 kesimpulan = "Tidak Tahu Konsep";
-                analisisTeks = "Jawaban/alasanmu salah dan kamu memang tidak yakin. Waktunya belajar bab ini lagi.";
+                analisisTeks = "Jawaban atau alasanmu salah dan kamu tidak yakin. Waktunya belajar bab ini lagi.";
             }
         }
 
@@ -361,7 +481,7 @@
     }
 
     function kirimDataDanSelesai() {
-        pindahHalaman('page2', 'pageLoading');
+        pindahHalaman('page5', 'pageLoading');
 
         // Satukan data identitas dan data hasil jawaban kuis
         let payload = {
@@ -371,7 +491,13 @@
             soal1_jawaban: `Jwb: ${hasilKuis.soal1_jawaban} (${hasilKuis.soal1_cri_jwb}), Als: ${hasilKuis.soal1_alasan} (${hasilKuis.soal1_cri_als})`,
             soal1_cri: hasilKuis.soal1_diagnosis,
             soal2_jawaban: `Jwb: ${hasilKuis.soal2_jawaban} (${hasilKuis.soal2_cri_jwb}), Als: ${hasilKuis.soal2_alasan} (${hasilKuis.soal2_cri_als})`,
-            soal2_cri: hasilKuis.soal2_diagnosis
+            soal2_cri: hasilKuis.soal2_diagnosis,
+            soal3_jawaban: `Jwb: ${hasilKuis.soal3_jawaban} (${hasilKuis.soal3_cri_jwb}), Als: ${hasilKuis.soal3_alasan} (${hasilKuis.soal3_cri_als})`,
+            soal3_cri: hasilKuis.soal3_diagnosis,
+            soal4_jawaban: `Jwb: ${hasilKuis.soal4_jawaban} (${hasilKuis.soal4_cri_jwb}), Als: ${hasilKuis.soal4_alasan} (${hasilKuis.soal4_cri_als})`,
+            soal4_cri: hasilKuis.soal4_diagnosis,
+            soal5_jawaban: `Jwb: ${hasilKuis.soal5_jawaban} (${hasilKuis.soal5_cri_jwb}), Als: ${hasilKuis.soal5_alasan} (${hasilKuis.soal5_cri_als})`,
+            soal5_cri: hasilKuis.soal5_diagnosis
         };
 
         // Mengirim data ke Google Sheets menggunakan API Fetch
@@ -397,13 +523,13 @@
     }
 
     function buatGrafikSiswa() {
-        // 1. Siapkan variabel hitung (Bahan Bakar Grafik)
+        // 1. Siapkan variabel hitung 
         let hitung = { "Paham Konsep": 0, "Miskonsepsi": 0, "Menebak": 0, "Tidak Tahu Konsep": 0 };
 
         // 2. Ambil data dari hasilKuis (Jawaban-jawaban tadi)
         // Kita cek semua diagnosis yang sudah masuk ke variabel hasilKuis
         Object.values(hasilKuis).forEach(status => {
-            if (status === "Paham Konsep Mulia") hitung["Paham Konsep"]++;
+            if (status === "Paham Konsep") hitung["Paham Konsep"]++;
             else if (status === "Miskonsepsi (Salah Paham)") hitung["Miskonsepsi"]++;
             else if (status === "Paham Sebagian / Kurang Yakin") hitung["Menebak"]++;
             else if (status === "Tidak Tahu Konsep") hitung["Tidak Tahu Konsep"]++;
