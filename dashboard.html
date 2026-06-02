@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis Diagnosis CRI (Four-Tier)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <title>Dashboard Analisis Guru - Kuis CRI</title>
+    <!-- Chart.js untuk Diagram Pie -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         * {
@@ -13,550 +18,336 @@
             margin: 0;
             padding: 0;
         }
-
         body {
-            background-image: url('bg.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            padding: 30px 20px;
         }
-
-        /* Menggunakan Font Chewy khusus untuk Judul, Soal, dan Tombol agar Estetik */
-        h1, h2, h3, button, .font-chewy, .option-label, .input-group, p{
-            font-family: 'Chewy', cursive;
-            letter-spacing: 1px;
-            font-size: 1.30rem;
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
         }
-
-        .quiz-container {
-            background-color: rgba(255, 255, 255, 0.0); 
-            width: 100%;
-            max-width: 850px;
-            height: 90vh;
-            max-height: 600px;
+        header {
+            margin-bottom: 30px;
+            background: #fff;
+            padding: 20px 25px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .page {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             display: flex;
-            flex-direction: column;
             justify-content: space-between;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            overflow-y: auto; /* Scroll aktif di dalam kotak jika layar HP pendek */
+            align-items: center;
         }
-
-        .page.active {
-            opacity: 1;
-            pointer-events: auto;
+        header h1 {
+            font-size: 24px;
+            color: #1e3a8a;
         }
-
-        h1 { text-align: center; color: #333; margin-bottom: 20px; font-size: 2.2rem; }
-        h2 { color: #333; margin-bottom: 15px; font-size: 2rem; }
-        h3 { color: #555; margin-bottom: 8px; font-size: 1.2rem; margin-top: 10px; }
-
-        .input-group {
-            margin-bottom: 15px;
+        header p {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 4px;
         }
-        .input-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #444;
-        }
-        .input-text {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ccc;
+        .btn-refresh {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 18px;
             border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-        }
-        .input-text:focus { border-color: #4285f4; }
-
-        /* Opsi Pilihan */
-        .option-label {
-            display: block;
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            padding: 8px 12px;
-            margin-bottom: 5px;
-            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 1.20rem;
-        }
-        .option-label:hover { background: #e8f0fe; border-color: #4285f4; }
-        input[type="radio"] { margin-right: 10px; transform: scale(1.1); }
-
-        hr { border: 0; height: 1px; background: #ddd; margin: 10px 0; }
-
-        .btn-container {
             display: flex;
-            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .btn-refresh:hover {
+            background-color: #1d4ed8;
+        }
+        
+        /* Layout Grid */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        @media (min-width: 992px) {
+            .grid-layout {
+                grid-template-columns: 7fr 5fr;
+            }
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #334155;
+            display: flex;
+            align-items: center;
             gap: 10px;
-            margin-top: 10px;
+            border-bottom: 2px solid #f1f5f9;
             padding-bottom: 10px;
         }
 
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
+        /* Tabel Styling */
+        .table-container {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
         }
-        button:hover { background-color: #218838; }
-        .btn-next { background-color: #28a745; display: none; }
-        .btn-next:hover { background-color: #218838; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        tr:hover {
+            background-color: #f8fafc;
+        }
 
-        /* Box Feedback */
-        .feedback-box {
-            display: none; 
-            margin-top: 12px;
-            padding: 12px;
-            border-left: 5px solid #218838;
-            border-radius: 0 8px 8px 0;
-        }
-        .status {
-            font-weight: bold;
+        /* Badge untuk Skor / Diagnosis */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
             display: inline-block;
-            margin-bottom: 5px;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
         }
-        .paham { background: #d4edda; color: #155724; border-color: #28a745; }
-        .miskonsepsi { background: #f8d7da; color: #721c24; border-color: #dc3545; }
-        .tebak { background: #fff3cd; color: #856404; border-color: #ffc107; }
-        .tidaktahu { background: #e2e3e5; color: #383d41; border-color: #6c757d; }
+        .badge-paham { background-color: #dcfce7; color: #166534; }
+        .badge-mis { background-color: #fee2e2; color: #991b1b; }
+        .badge-tebak { background-color: #fef3c7; color: #92400e; }
+        .badge-tidak { background-color: #f1f5f9; color: #475569; }
+
+        /* Chart Area */
+        .chart-wrapper {
+            position: relative;
+            margin: auto;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 40px 0;
+            color: #64748b;
+            font-size: 16px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
-<div class="quiz-container">
-
-    <div class="page active" id="pageIdentitas">
+<div class="container">
+    <header>
         <div>
-            <h1>Mulai Kuis CRI</h1>
-            <p style="text-align: center; color: #e24848; margin-bottom: 30px;">Silakan isi identitas kamu terlebih dahulu.</p>
-            
-            <div class="input-group">
-                <label for="namaSiswa">Nama Lengkap:</label>
-                <input type="text" id="namaSiswa" class="input-text" placeholder="Masukkan nama kamu...">
+            <h1><i class="fa-solid fa-chart-line"></i> Dashboard Analisis Guru</h1>
+            <p>Monitoring Evaluasi Tingkat Pemahaman Konsep Siswa (Four-Tier CRI)</p>
+        </div>
+        <button class="btn-refresh" onclick="muatData()"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+    </header>
+
+    <div class="grid-layout">
+        <!-- SEBELAH KIRI: TABEL DATA SISWA -->
+        <div class="card">
+            <div class="card-title"><i class="fa-solid fa-users"></i> Daftar Hasil Ujian Siswa</div>
+            <div class="table-container" id="kontenTabel">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Sedang menarik data dari Google Sheets...
+                </div>
             </div>
-            <div class="input-group">
-                <label for="kelasSiswa">Kelas:</label>
-                <input type="text" id="kelasSiswa" class="input-text" placeholder="Contoh: XI-MIPA 1">
+        </div>
+
+        <!-- SEBELAH KANAN: PIE CHART AKUMULASI KELAS -->
+        <div class="card">
+            <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Akumulasi Diagnosis Satu Kelas</div>
+            <div class="chart-wrapper">
+                <canvas id="pieChartKelas"></canvas>
             </div>
         </div>
-        <div class="btn-container">
-            <button onclick="mulaiKuis()">Mulai Kuis</button>
-        </div>
     </div>
-
-    <div class="page" id="page1">
-        <div>
-            <h2>Soal 1: Pernyataan yang tepat tentang reaksi gelap (Siklus Calvin) adalah ...  </h2>
-            
-            <h3>Tier 1: Pilihan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="q1" value="A"> A. Reaksi gelap hanya berlangsung pada malam hari</label>
-            <label class="option-label"><input type="radio" name="q1" value="B"> B. Reaksi gelap berlangsung tanpa memerlukan ATP dan NADPH</label>
-            <label class="option-label"><input type="radio" name="q1" value="C"> C. Reaksi gelap dapat berlangsung tanpa cahaya langsung tetapi memerlukan hasil reaksi terang</label>
-            <label class="option-label"><input type="radio" name="q1" value="D"> D. Reaksi gelap terjadi di membran tilakoid</label>
-            <label class="option-label"><input type="radio" name="q1" value="E"> E. Reaksi gelap menghasilkan oksigen melalui fotolisis udara</label>
-            
-            <h3>Tier 2: Keyakinan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="c1" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="c1" value="tidak"> Tidak Yakin</label>
-
-            <hr>
-
-            <h3>Tier 3: Pilihan Alasan</h3>
-            <label class="option-label"><input type="radio" name="a1" value="A"> A. Siklus Calvin menggunakan ATP dan NADPH hasil reaksi terang untuk mereduksi CO₂</label>
-            <label class="option-label"><input type="radio" name="a1" value="B"> B. Reaksi gelap hanya aktif ketika tidak ada cahaya sama sekali</label>
-            <label class="option-label"><input type="radio" name="a1" value="C"> C. Reaksi gelap menghasilkan energi utama berupa ATP</label>
-            <label class="option-label"><input type="radio" name="a1" value="D"> D. Fotolisis udara berlangsung selama Siklus Calvin di stroma</label>
-            <label class="option-label"><input type="radio" name="a1" value="E"> E. Cahaya tidak berhubungan sama sekali dengan Siklus Calvin</label>
-
-            <h3>Tier 4: Keyakinan Alasan</h3>
-            <label class="option-label"><input type="radio" name="ca1" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="ca1" value="tidak"> Tidak Yakin</label>
-
-            <div class="feedback-box" id="fb1"></div>
-        </div>
-        <div class="btn-container">
-            <button id="btnCheck1" onclick="cekJawaban(1)">Cek Jawaban</button>
-            <button id="btnNext1" class="btn-next" onclick="pindahHalaman('page1', 'page2')">Lanjut ke Soal 2</button>
-        </div>
-    </div>
-
-    <div class="page" id="page2">
-        <div>
-            <h2>Soal 2: Oksigen yang dilepaskan tumbuhan saat fotosintesis berasal dari ... </h2>
-            
-            <h3>Tier 1: Pilihan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="q2" value="A"> A. Karbon dioksida</label>
-            <label class="option-label"><input type="radio" name="q2" value="B"> B. Glukosa</label>
-            <label class="option-label"><input type="radio" name="q2" value="C"> C. RuBP</label>
-            <label class="option-label"><input type="radio" name="q1" value="D"> D. Udara</label>
-            <label class="option-label"><input type="radio" name="q1" value="E"> E. TP</label>
-
-            <h3>Tier 2: Keyakinan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="c2" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="c2" value="tidak"> Tidak Yakin</label>
-
-            <hr>
-
-            <h3>Tier 3: Pilihan Alasan</h3>
-            <label class="option-label"><input type="radio" name="a2" value="A"> A. Fotolisis memecah molekul udara menghasilkan elektron, proton, dan oksigen</label>
-            <label class="option-label"><input type="radio" name="a2" value="B"> B. Karbon dioksida diuraikan menjadi karbon dan oksigen saat reaksi gelap</label>
-            <label class="option-label"><input type="radio" name="a2" value="C"> C. Oksigen terbentuk ketika glukosa dipecah selama fotosintesis</label>
-            <label class="option-label"><input type="radio" name="a1" value="D"> D. ATP menghasilkan oksigen saat diubah menjadi ADP</label>
-            <label class="option-label"><input type="radio" name="a1" value="E"> E. RuBP bereaksi dengan O₂ untuk menghasilkan oksigen bebas</label>
-
-            <h3>Tier 4: Keyakinan Alasan</h3>
-            <label class="option-label"><input type="radio" name="ca2" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="ca2" value="tidak"> Tidak Yakin</label>
-
-            <div class="feedback-box" id="fb2"></div>
-        </div>
-        <div class="btn-container">
-            <button id="btnCheck2" onclick="cekJawaban(2)">Cek Jawaban</button>
-            <button id="btnNext2" class="btn-next" onclick="pindahHalaman('page2', 'page3')">Lanjut ke Soal 3</button>
-        </div>
-    </div>
-
-    <div class="page" id="page3">
-        <div>
-            <h2>Soal 3: Fungsi utama klorofil dalam fotosintesis adalah ... </h2>
-            
-            <h3>Tier 1: Pilihan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="q3" value="A"> A. Menghasilkan karbon dioksida</label>
-            <label class="option-label"><input type="radio" name="q3" value="B"> B. Menyerap energi cahaya </label>
-            <label class="option-label"><input type="radio" name="q3" value="C"> C. Menghasilkan glukosa secara langsung</label>
-            <label class="option-label"><input type="radio" name="q3" value="D"> D. Mengangkut udara menuju daun</label>
-            <label class="option-label"><input type="radio" name="q3" value="E"> E. Memecah glukosa menjadi ATP</label>
-            
-            <h3>Tier 2: Keyakinan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="c3" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="c3" value="tidak"> Tidak Yakin</label>
-
-            <hr>
-
-            <h3>Tier 3: Pilihan Alasan</h3>
-            <label class="option-label"><input type="radio" name="a3" value="A"> A. Klorofil menyerap energi cahaya untuk mengeksitasi elektron pada fotosistem</label>
-            <label class="option-label"><input type="radio" name="a3" value="B"> B. bantuan Klorofil menghasilkan ATP secara langsung tanpa elektron</label>
-            <label class="option-label"><input type="radio" name="a3" value="C"> C. Klorofil berfungsi sebagai enzim pada Siklus Calvin</label>
-            <label class="option-label"><input type="radio" name="a3" value="D"> D. Klorofil memecah udara menjadi glukosa dan oksigen</label>
-            <label class="option-label"><input type="radio" name="a3" value="E"> E. Klorofil hanya memberi warna hijau tanpa fungsi fotosintesis</label>
-
-            <h3>Tier 4: Keyakinan Alasan</h3>
-            <label class="option-label"><input type="radio" name="ca3" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="ca3" value="tidak"> Tidak Yakin</label>
-
-            <div class="feedback-box" id="fb3"></div>
-        </div>
-        <div class="btn-container">
-            <button id="btnCheck3" onclick="cekJawaban(3)">Cek Jawaban</button>
-            <button id="btnNext3" class="btn-next" onclick="pindahHalaman('page3', 'page4')">Lanjut ke Soal 4</button>
-        </div>
-    </div>
-
-    <div class="page" id="page4">
-        <div>
-            <h2>Soal 4: ATP yang digunakan dalam Siklus Calvin berasal dari ... </h2>
-            
-            <h3>Tier 1: Pilihan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="q4" value="A"> A. Respirasi di mitokondria saja</label>
-            <label class="option-label"><input type="radio" name="q4" value="B"> B. Fotolisis udara secara langsung</label>
-            <label class="option-label"><input type="radio" name="q4" value="C"> C. Fotofosforilasi pada reaksi terang</label>
-            <label class="option-label"><input type="radio" name="q4" value="D"> D. Pemecahan glukosa pada stroma</label>
-            <label class="option-label"><input type="radio" name="q4" value="E"> E. Pengikatan karbon dioksida oleh rubisco</label>
-            
-            <h3>Tier 2: Keyakinan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="c4" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="c4" value="tidak"> Tidak Yakin</label>
-
-            <hr>
-
-            <h3>Tier 3: Pilihan Alasan</h3>
-            <label class="option-label"><input type="radio" name="a4" value="A"> A. Energi elektron pada rantai transpor elektron digunakan untuk sintesis ATP melalui kemiosmosis</label>
-            <label class="option-label"><input type="radio" name="a4" value="B"> B. ATP diproduksi langsung oleh rubisco saat mengikat CO₂</label>
-            <label class="option-label"><input type="radio" name="a4" value="C"> C. ATP terbentuk ketika glukosa dihasilkan dalam Siklus Calvin</label>
-            <label class="option-label"><input type="radio" name="a4" value="D"> D. ATP hanya digunakan pada reaksi terang dan tidak digunakan pada reaksi gelap</label>
-            <label class="option-label"><input type="radio" name="a4" value="E"> E. Fotolisis menghasilkan ATP tanpa keterlibatan transpor elektron</label>
-
-            <h3>Tier 4: Keyakinan Alasan</h3>
-            <label class="option-label"><input type="radio" name="ca4" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="ca4" value="tidak"> Tidak Yakin</label>
-
-            <div class="feedback-box" id="fb4"></div>
-        </div>
-        <div class="btn-container">
-            <button id="btnCheck4" onclick="cekJawaban(4)">Cek Jawaban</button>
-            <button id="btnNext4" class="btn-next" onclick="pindahHalaman('page4', 'page5')">Lanjut ke Soal 5</button>
-        </div>
-    </div>
-
-    <div class="page" id="page5">
-        <div>
-            <h2>Soal 5: Tumbuhan C4 lebih efisien pada suhu tinggi karena ...  </h2>
-            
-            <h3>Tier 1: Pilihan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="q5" value="A"> A. Tidak melakukan Siklus Calvin</label>
-            <label class="option-label"><input type="radio" name="q5" value="B"> B. Tidak membutuhkan rubisco</label>
-            <label class="option-label"><input type="radio" name="q5" value="C"> C. Dapat mengurangi fotorespirasi</label>
-            <label class="option-label"><input type="radio" name="q5" value="D"> D. Menghasilkan ATP lebih sedikit</label>
-            <label class="option-label"><input type="radio" name="q5" value="E"> E. Tidak memerlukan karbon dioksida</label>
-            
-            <h3>Tier 2: Keyakinan Jawaban</h3>
-            <label class="option-label"><input type="radio" name="c5" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="c5" value="tidak"> Tidak Yakin</label>
-
-            <hr>
-
-            <h3>Tier 3: Pilihan Alasan</h3>
-            <label class="option-label"><input type="radio" name="a5" value="A"> A. CO₂ dikonsentrasikan pada bundle sheath sehingga rubisco lebih banyak berikatan dengan CO₂ dibandingkan O₂.</label>
-            <label class="option-label"><input type="radio" name="a5" value="B"> B. Fotorespirasi meningkatkan produksi glukosa pada suhu tinggi</label>
-            <label class="option-label"><input type="radio" name="a5" value="C"> C. Rubisco hanya dimiliki tumbuhan C3</label>
-            <label class="option-label"><input type="radio" name="a5" value="D"> D. Tumbuhan C4 tidak memiliki sel mesofil</label>
-            <label class="option-label"><input type="radio" name="a5" value="E"> E. ATP pada tumbuhan C4 dihasilkan tanpa cahaya</label>
-
-            <h3>Tier 4: Keyakinan Alasan</h3>
-            <label class="option-label"><input type="radio" name="ca5" value="yakin"> Yakin</label>
-            <label class="option-label"><input type="radio" name="ca5" value="tidak"> Tidak Yakin</label>
-
-            <div class="feedback-box" id="fb5"></div>
-        </div>
-        <div class="btn-container">
-            <button id="btnCheck5" onclick="cekJawaban(5)">Cek Jawaban</button>
-            <button id="btnNext5" class="btn-next" onclick="kirimDataDanSelesai()">Selesai & Kirim Nilai</button>
-        </div>
-    </div>
-
-    <div class="page" id="pageLoading">
-        <div style="text-align: center; margin: auto 0;">
-            <h2 class="font-chewy">Memproses data...</h2>
-            <p>Mohon tunggu sebentar, nilai kamu sedang dikirim ke guru.</p>
-        </div>
-    </div>
-
-    <div class="page" id="pageAkhir">
-        <div style="text-align: center; margin: auto 0;">
-            <h1>Kuis Selesai!</h1>
-            <p style="font-size: 1.2rem; margin-bottom: 10px;">Terima kasih telah mengisi kuis diagnosis ini.</p>
-            
-            <div id="skorAkhir" style="font-size: 1.5rem; font-weight: bold; color: #1352b6; margin-bottom: 20px;"></div>
-
-            <div style="width: 100%; max-width: 250px; margin: 0 auto 20px;">
-                <canvas id="chartSiswa"></canvas>
-            </div>
-
-            <button onclick="location.reload()" style="background-color: #6c757d;">Ulangi Kuis</button>
-        </div>
-    </div>
-
 </div>
 
 <script>
-    // URL Web App Google Sheets Kamu
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRYZ76X6RM8uLgb5H726K_AsUIzUKoEhVrV-egXnDn-t3LBt4uaEakVEwatBc4MSap/exec";
+    // ⚠️ GANTI TULISAN DI BAWAH INI DENGAN URL WEB APPS SCRIPT KAMU YANG BARU (YANG ADA doGet NYA)
+    const API_URL = "https://script.google.com/macros/s/AKfycbxRYZ76X6RM8uLgb5H726K_AsUIzUKoEhVrV-egXnDn-t3LBt4uaEakVEwatBc4MSap/exec";
 
-    // Kunci Jawaban Benar (Soal & Alasan)
-    const kunci = {
-        q1: "C", a1: "A", 
-        q2: "A", a2: "B",  
-        q3: "B", a3: "A", 
-        q4: "C", a4: "A",  
-        q5: "C", a5: "A"  
-    };
+    let chartSiswa = null;
 
-    let dataSiswa = { nama: "", kelas: "", skor: 0 };
-    let hasilKuis = {};
+    async function muatData() {
+        const tabelContainer = document.getElementById("kontenTabel");
+        tabelContainer.innerHTML = `<div class="loading"><div class="spinner"></div>Sedang memperbarui data...</div>`;
 
-    function mulaiKuis() {
-        let nama = document.getElementById('namaSiswa').value.trim();
-        let kelas = document.getElementById('kelasSiswa').value.trim();
-
-        if (!nama || !kelas) {
-            alert("Nama dan Kelas wajib diisi!");
+        if (API_URL === "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_KAMU") {
+            tabelContainer.innerHTML = `<div style="color:red; text-align:center; padding: 20px;"><b>Eror:</b> Kamu belum memasukkan link API Apps Script di baris ke-142 kodingan dashboard.html ini!</div>`;
             return;
         }
 
-        dataSiswa.nama = nama;
-        dataSiswa.kelas = kelas;
-        pindahHalaman('pageIdentitas', 'page1');
-    }
+        try {
+            const respon = await fetch(API_URL);
+            const dataSiswa = await respon.json();
 
-    function cekJawaban(num) {
-        let q = document.querySelector(`input[name="q${num}"]:checked`);
-        let c = document.querySelector(`input[name="c${num}"]:checked`);
-        let a = document.querySelector(`input[name="a${num}"]:checked`);
-        let ca = document.querySelector(`input[name="ca${num}"]:checked`);
-
-        if (!q || !c || !a || !ca) {
-            alert("Mohon isi semua tingkatan (Tier 1 sampai Tier 4)!");
-            return;
-        }
-
-        // Mengunci jawaban agar tidak bisa diubah
-        document.querySelectorAll(`input[name="q${num}"], input[name="c${num}"], input[name="a${num}"], input[name="ca${num}"]`).forEach(el => el.disabled = true);
-
-        let isQCorrect = (q.value === kunci[`q${num}`]);
-        let isACorrect = (a.value === kunci[`a${num}`]);
-        
-        let fbBox = document.getElementById(`fb${num}`);
-        let btnCheck = document.getElementById(`btnCheck${num}`);
-        let btnNext = document.getElementById(`btnNext${num}`);
-
-        let statusClass = "";
-        let kesimpulan = "";
-        let analisisTeks = "";
-
-        // Logika Analisis Miskonsepsi Kuis 4 Tingkat (Four-Tier)
-        if (isQCorrect && isACorrect) {
-            if (c.value === "yakin" && ca.value === "yakin") {
-                statusClass = "paham";
-                kesimpulan = "Paham Konsep";
-                analisisTeks = "Keren! Jawaban dan alasan kamu benar. Sangat percaya diri!.";
-                dataSiswa.skor += 20; // Total maksimal 100 untuk 2 soal
-            } else {
-                statusClass = "tebak";
-                kesimpulan = "Kurang Paham";
-                analisisTeks = "Jawaban dan alasanmu benar, tapi kamu ragu-ragu. Konsepmu perlu dimantapkan lagi.";
+            if (dataSiswa.length === 0) {
+                tabelContainer.innerHTML = `<div style="text-align:center; padding: 20px;">Belum ada data siswa yang masuk.</div>`;
+                return;
             }
-        } else if (!isQCorrect || !isACorrect) {
-            if (c.value === "yakin" || ca.value === "yakin") {
-                statusClass = "miskonsepsi";
-                kesimpulan = "Miskonsepsi (Salah Paham)";
-                analisisTeks = "Kamu yakin dengan jawaban atau alasanmu, Tapi ada konsep yang keliru di dalamnya.";
-            } else {
-                statusClass = "tidaktahu";
-                kesimpulan = "Tidak Tahu Konsep";
-                analisisTeks = "Jawaban atau alasanmu salah dan kamu tidak yakin. Waktunya belajar bab ini lagi.";
-            }
-        }
 
-        // Simpan hasil ke memori untuk dikirim ke Sheets nanti
-        hasilKuis[`soal${num}_jawaban`] = q.value;
-        hasilKuis[`soal${num}_cri_jwb`] = c.value;
-        hasilKuis[`soal${num}_alasan`] = a.value;
-        hasilKuis[`soal${num}_cri_als`] = ca.value;
-        hasilKuis[`soal${num}_diagnosis`] = kesimpulan;
+            // Wadah penampung hitungan kategori untuk Chart
+            let hitungKategori = {
+                "Paham Konsep": 0,
+                "Miskonsepsi": 0,
+                "Menebak": 0,
+                "Tidak Tahu Konsep": 0
+            };
 
-        // Tampilkan Umpan Balik Instan
-        fbBox.className = `feedback-box ${statusClass}`;
-        fbBox.style.display = "block";
-        fbBox.innerHTML = `
-            <span class="status ${statusClass}">${kesimpulan}</span>
-            <p style="font-size: 0.9rem; color: #333; margin-top: 5px;">${analisisTeks}</p>
-        `;
+            // Bikin Struktur Tabel
+            let htmlTabel = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Skor</th>
+                            <th>Soal 1</th>
+                            <th>Soal 2</th>
+                            <th>Soal 3</th>
+                            <th>Soal 4</th>
+                            <th>Soal 5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
 
-        btnCheck.style.display = "none";
-        btnNext.style.display = "block";
-    }
+            // Loop untuk memasukkan baris data ke tabel & sekalian menghitung kategori chart
+            dataSiswa.forEach(siswa => {
+                htmlTabel += `
+                    <tr>
+                        <td><b>${siswa.nama}</b></td>
+                        <td>${siswa.kelas}</td>
+                        <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">${siswa.skor}</span></td>
+                        <td>${buatBadgeDiagnosis(siswa.soal1_cri)}</td>
+                        <td>${buatBadgeDiagnosis(siswa.soal2_cri)}</td>
+                        <td>${buatBadgeDiagnosis(siswa.soal3_cri)}</td>
+                        <td>${buatBadgeDiagnosis(siswa.soal4_cri)}</td>
+                        <td>${buatBadgeDiagnosis(siswa.soal5_cri)}</td>
+                    </tr>
+                `;
 
-    function pindahHalaman(dari, ke) {
-        document.getElementById(dari).classList.remove('active');
-        document.getElementById(ke).classList.add('active');
-    }
+                // Hitung akumulasi untuk dimasukkan ke diagram pie
+                akumulasiKategori(siswa.soal1_cri, hitungKategori);
+                akumulasiKategori(siswa.soal2_cri, hitungKategori);
+                akumulasiKategori(siswa.soal3_cri, hitungKategori);
+                akumulasiKategori(siswa.soal4_cri, hitungKategori);
+                akumulasiKategori(siswa.soal5_cri, hitungKategori);
+            });
 
-    function kirimDataDanSelesai() {
-        pindahHalaman('page5', 'pageLoading');
+            htmlTabel += `</tbody></table>`;
+            tabelContainer.innerHTML = htmlTabel;
 
-        // Satukan data identitas dan data hasil jawaban kuis
-        let payload = {
-            nama: dataSiswa.nama,
-            kelas: dataSiswa.kelas,
-            skor: dataSiswa.skor,
-            soal1_jawaban: `Jwb: ${hasilKuis.soal1_jawaban} (${hasilKuis.soal1_cri_jwb}), Als: ${hasilKuis.soal1_alasan} (${hasilKuis.soal1_cri_als})`,
-            soal1_cri: hasilKuis.soal1_diagnosis,
-            soal2_jawaban: `Jwb: ${hasilKuis.soal2_jawaban} (${hasilKuis.soal2_cri_jwb}), Als: ${hasilKuis.soal2_alasan} (${hasilKuis.soal2_cri_als})`,
-            soal2_cri: hasilKuis.soal2_diagnosis,
-            soal3_jawaban: `Jwb: ${hasilKuis.soal3_jawaban} (${hasilKuis.soal3_cri_jwb}), Als: ${hasilKuis.soal3_alasan} (${hasilKuis.soal3_cri_als})`,
-            soal3_cri: hasilKuis.soal3_diagnosis,
-            soal4_jawaban: `Jwb: ${hasilKuis.soal4_jawaban} (${hasilKuis.soal4_cri_jwb}), Als: ${hasilKuis.soal4_alasan} (${hasilKuis.soal4_cri_als})`,
-            soal4_cri: hasilKuis.soal4_diagnosis,
-            soal5_jawaban: `Jwb: ${hasilKuis.soal5_jawaban} (${hasilKuis.soal5_cri_jwb}), Als: ${hasilKuis.soal5_alasan} (${hasilKuis.soal5_cri_als})`,
-            soal5_cri: hasilKuis.soal5_diagnosis
-        };
+            // Gambar atau update Diagram Pie Chart
+            updatePieChart(hitungKategori);
 
-        // Mengirim data ke Google Sheets menggunakan API Fetch
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        })
-        .then(() => {
-            pindahHalaman('pageLoading', 'pageAkhir');
-            document.getElementById('skorAkhir').innerText = `Skor Kamu: ${dataSiswa.skor} / 100`;
-            
-            // PANGGIL DI SINI BIAR MUNCUL PAS HALAMAN TERAKHIR TERBUKA
-            buatGrafikSiswa();
-        })
-        .catch(error => {
-            alert("Gagal mengirim data, tapi kuis selesai!");
-            pindahHalaman('pageLoading', 'pageAkhir');
-            document.getElementById('skorAkhir').innerText = `Skor Kamu: ${dataSiswa.skor} / 100`;
+        } catch (error) {
             console.error(error);
-        });
+            tabelContainer.innerHTML = `<div style="color:red; text-align:center; padding: 20px;"><b>Gagal mengambil data!</b><br>Pastikan Apps Script sudah di-deploy dengan akses 'Anyone' (Siapa Saja).</div>`;
+        }
     }
 
-    function buatGrafikSiswa() {
-        // 1. Siapkan variabel hitung 
-        let hitung = { "Paham Konsep": 0, "Miskonsepsi": 0, "Menebak": 0, "Tidak Tahu Konsep": 0 };
+    // Fungsi pembantu membuat warna badge di tabel agar menarik
+    function buatBadgeDiagnosis(teksKategori) {
+        if (!teksKategori) return "-";
+        let norm = teksKategori.toLowerCase();
+        if (norm.includes("paham konsep")) return `<span class="badge badge-paham">Paham Konsep</span>`;
+        if (norm.includes("miskonsepsi") || norm.includes("salah paham")) return `<span class="badge badge-mis">Miskonsepsi</span>`;
+        if (norm.includes("menebak") || norm.includes("kurang yakin")) return `<span class="badge badge-tebak">Menebak</span>`;
+        return `<span class="badge badge-tidak">Tidak Tahu Konsep</span>`;
+    }
 
-        // 2. Ambil data dari hasilKuis (Jawaban-jawaban tadi)
-        // Kita cek semua diagnosis yang sudah masuk ke variabel hasilKuis
-        Object.values(hasilKuis).forEach(status => {
-            if (status === "Paham Konsep") hitung["Paham Konsep"]++;
-            else if (status === "Miskonsepsi (Salah Paham)") hitung["Miskonsepsi"]++;
-            else if (status === "Paham Sebagian / Kurang Yakin") hitung["Menebak"]++;
-            else if (status === "Tidak Tahu Konsep") hitung["Tidak Tahu Konsep"]++;
-        });
+    // Fungsi pembantu mengelompokkan teks dari sheet ke kategori chart
+    function akumulasiKategori(teksKategori, objekHitung) {
+        if (!teksKategori) return;
+        let norm = teksKategori.toLowerCase();
+        if (norm.includes("paham konsep")) objekHitung["Paham Konsep"]++;
+        else if (norm.includes("miskonsepsi") || norm.includes("salah paham")) objekHitung["Miskonsepsi"]++;
+        else if (norm.includes("menebak") || norm.includes("kurang yakin")) objekHitung["Menebak"]++;
+        else objekHitung["Tidak Tahu Konsep"]++;
+    }
 
-        // 3. Gambar Grafiknya menggunakan Chart.js
-        const ctx = document.getElementById('chartSiswa').getContext('2d');
-        new Chart(ctx, {
+    // Fungsi menggambar Chart.js
+    function updatePieChart(dataHitung) {
+        const ctx = document.getElementById('pieChartKelas').getContext('2d');
+        
+        // Kalau chart-nya sudah ada, kita hancurkan dulu lalu bikin baru biar datanya ter-refresh lancar
+        if (chartSiswa !== null) {
+            chartSiswa.destroy();
+        }
+
+        chartSiswa = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: Object.keys(hitung),
+                labels: Object.keys(dataHitung),
                 datasets: [{
-                    data: Object.values(hitung),
-                    backgroundColor: ['#28a745', '#dc3545', '#ffc107', '#6c757d'], // Warna: Hijau, Merah, Kuning, Abu
-                    borderWidth: 1
+                    data: Object.values(dataHitung),
+                    backgroundColor: [
+                        '#22c55e', // Hijau untuk Paham Konsep
+                        '#ef4444', // Merah untuk Miskonsepsi
+                        '#eab308', // Kuning untuk Menebak
+                        '#64748b'  // Abu-abu untuk Tidak Tahu Konsep
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { position: 'bottom' }
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: { size: 13 }
+                        }
+                    }
                 }
             }
         });
     }
 
-
+    // Jalankan otomatis fungsi memuat data saat halaman web pertama kali dibuka
+    window.onload = muatData;
 </script>
 
 </body>
